@@ -20,7 +20,6 @@ function PostComments({ comment, user, setComments, postId }) {
               <Comment.Action>
                 {(user.role === "root" || comment.user._id === user._id) && (
                   <Icon
-                    disabled={disabled}
                     color="red"
                     name="trash"
                     onClick={async () => {

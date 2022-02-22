@@ -6,7 +6,7 @@
 
 <br>
 
-1. Nextjs version updated to 12.0.10 (Latest one at the time of commit).
+1. Nextjs version updated to 12.1.0 (Latest one at the time of commit).
 
 2. Updated socket io version to 4.4.1 (Latest one at the time of commit). Now io is not a default export from socket.io-client package.
 
