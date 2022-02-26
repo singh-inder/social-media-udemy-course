@@ -223,7 +223,8 @@ function Messages({ chatsData, user }) {
                   <Segment raised style={{ overflow: "auto", maxHeight: "32rem" }}>
                     {chats.map(chat => (
                       <Chat
-                        chat={chat.messagesWith}
+                        key={chat.messagesWith}
+                        chat={chat}
                         connectedUsers={connectedUsers}
                         deleteChat={deleteChat}
                       />
@@ -249,10 +250,10 @@ function Messages({ chatsData, user }) {
                       </div>
 
                       {messages.length > 0 &&
-                        messages.map((message, i) => (
+                        messages.map(message => (
                           <Message
                             divRef={divRef}
-                            key={i}
+                            key={message._id}
                             bannerProfilePic={bannerData.profilePicUrl}
                             message={message}
                             user={user}

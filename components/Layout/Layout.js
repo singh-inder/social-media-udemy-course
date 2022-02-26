@@ -1,5 +1,4 @@
 import React, { useRef } from "react";
-import HeadTags from "./HeadTags";
 import Navbar from "./Navbar";
 import { Container, Visibility, Grid, Sticky, Ref, Segment } from "semantic-ui-react";
 import nprogress from "nprogress";
@@ -28,7 +27,6 @@ function Layout({ children, user }) {
 
   return (
     <>
-      <HeadTags />
       {user ? (
         <>
           <style>{mediaStyles}</style>

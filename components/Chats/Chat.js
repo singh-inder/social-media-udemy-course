@@ -1,4 +1,3 @@
-import React from "react";
 import { Divider, Comment, Icon, List } from "semantic-ui-react";
 import { useRouter } from "next/router";
 import calculateTime from "../../utils/calculateTime";
@@ -31,7 +30,9 @@ function Chat({ chat, connectedUsers, deleteChat }) {
 
               <Comment.Metadata>
                 <div>{calculateTime(chat.date)}</div>
-                <div style={{ position: "absolute", right: "10px", cursor: "pointer" }}>
+                <div
+                  style={{ position: "absolute", right: "10px", cursor: "pointer" }}
+                >
                   <Icon
                     name="trash alternate"
                     color="red"
@@ -41,7 +42,7 @@ function Chat({ chat, connectedUsers, deleteChat }) {
               </Comment.Metadata>
 
               <Comment.Text>
-                {chat.lastMessage.length > 20
+                {chat.lastMessage?.length > 20
                   ? `${chat.lastMessage.substring(0, 20)} ...`
                   : chat.lastMessage}
               </Comment.Text>
