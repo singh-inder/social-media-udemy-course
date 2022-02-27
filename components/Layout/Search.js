@@ -4,7 +4,7 @@ import axios from "axios";
 import cookie from "js-cookie";
 import Router from "next/router";
 import baseUrl from "../../utils/baseUrl";
-let cancel;
+let controller = null;
 
 function SearchComponent() {
   const [text, setText] = useState("");
@@ -22,15 +22,13 @@ function SearchComponent() {
     setLoading(true);
 
     try {
-      cancel && cancel();
-      const CancelToken = axios.CancelToken;
+      if (controller) controller.abort();
+      controller = new AbortController();
       const token = cookie.get("token");
 
       const res = await axios.get(`${baseUrl}/api/search/${value}`, {
         headers: { Authorization: token },
-        cancelToken: new CancelToken(canceler => {
-          cancel = canceler;
-        })
+        signal: controller.signal
       });
 
       if (res.data.length === 0) {
@@ -42,7 +40,7 @@ function SearchComponent() {
     } catch (error) {
       console.log(error);
     }
-
+    controller = null;
     setLoading(false);
   };
 

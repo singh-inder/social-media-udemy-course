@@ -15,6 +15,14 @@ import getUserInfo from "../utils/getUserInfo";
 import newMsgSound from "../utils/newMsgSound";
 import cookie from "js-cookie";
 
+const setMessageToUnread = async () => {
+  await axios.post(
+    `${baseUrl}/api/chats`,
+    {},
+    { headers: { Authorization: cookie.get("token") } }
+  );
+};
+
 const scrollDivToBottom = divRef =>
   divRef.current !== null && divRef.current.scrollIntoView({ behaviour: "smooth" });
 
@@ -35,6 +43,8 @@ function Messages({ chatsData, user }) {
 
   //CONNECTION useEffect
   useEffect(() => {
+    if (user.unreadMessage) setMessageToUnread();
+
     if (!socket.current) {
       socket.current = io(baseUrl);
     }

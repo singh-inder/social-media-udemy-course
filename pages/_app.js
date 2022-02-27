@@ -1,3 +1,4 @@
+import Head from "next/head";
 import axios from "axios";
 import { parseCookies, destroyCookie } from "nookies";
 import baseUrl from "../utils/baseUrl";
@@ -7,9 +8,16 @@ import "semantic-ui-css/semantic.min.css";
 
 function MyApp({ Component, pageProps }) {
   return (
-    <Layout {...pageProps}>
-      <Component {...pageProps} />
-    </Layout>
+    <>
+      <Head>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta charSet="UTF-8" />
+        <title>Mini Social Media</title>
+      </Head>
+      <Layout {...pageProps}>
+        <Component {...pageProps} />
+      </Layout>
+    </>
   );
 }
 

@@ -1,19 +1,24 @@
-### [Click to view the Udemy Course](https://www.udemy.com/course/mernstack-nextjs-withsocketio/?referralCode=A31CAC3FD91000489D0A)
+<br />
+
+## [Click to view the Udemy Course](https://www.udemy.com/course/mernstack-nextjs-withsocketio/?referralCode=A31CAC3FD91000489D0A)
 
 ---
 
-### Changes made since the course published:
+## Updates made since the course published:
 
 <br>
 
-1. Nextjs version updated to 12.1.0 (Latest one at the time of commit).
+## Nextjs version update
 
-2. Removed components/HeadTags.js. Created a new file pages/\_document.js. With the latest version of nextjs, they recommend to add stylesheets and meta tags inside pages/\_document.js. Visit [NextJs Docs](https://nextjs.org/docs/messages/no-stylesheets-in-head-component) for more.
-   <br />
-   <br />
-   <img src='https://raw.githubusercontent.com/inderrr/imagesForRepos/main/Screenshot%202022-02-26%20221457.png' />
+- Nextjs version updated to 12.1.0 (Latest one at the time of commit).
 
-3. Updated socket io version to 4.4.1 (Latest one at the time of commit). Now io is not a default export from socket.io-client package.
+---
+
+<br>
+
+## socket.io version update
+
+- Updated socket io version to 4.4.1 (Latest one at the time of commit). Now io is not a default export from socket.io-client package.
 
 ```javascript
 // Previously
@@ -23,14 +28,74 @@ import io from "socket.io-client";
 import { io } from "socket.io-client";
 ```
 
-4. Created a new SocketHoc component. Explanation about this is [Here](https://www.udemy.com/course/mernstack-nextjs-withsocketio/learn/#questions/15297138/).
+---
 
-5. Replaced getInitialProps with getServerSideProps. Explanation [Here](https://www.udemy.com/course/mernstack-nextjs-withsocketio/learn/lecture/28229950#overview)
+<br />
 
-6. Replaced momentjs with dayjs. dayjs is only 2kb in size. The changes made are inside utils/calculateTime.js
+## Important changes inside signup page.
 
-7. Some minor bug fixes.
+- I've removed all the states for username input field on signup page.
+
+- Now, we're using vanilla js alongwith useRef hooks inside signup page for making updates to username field. The changes made are inside pages/signup.js
 
 ---
 
+<br />
+
+## axios cancelToken deprecated
+
+- Starting from v0.22.0 Axios supports AbortController to cancel requests and cancelToken method is deprecated.
+
+- I've replaced cancelToken with AbortController inside the project. Changes made are inside pages/signup.js and components/Layout/Search.js
+
+---
+
+<br />
+
+## components/HeadTags.js removed
+
+- With the latest version (12.1.0), nextjs recommends to link stylesheets inside pages/\_document.js. And the tags like `<title>, <meta>` to be moved inside next/head.
+
+- Thats why the stylesheets link tags have been moved to pages/\_document.js. And the meta tags are inside pages/\_app.js.
+
+- Visit [NextJs Docs](https://nextjs.org/docs/messages/no-stylesheets-in-head-component) for more info.
+  <br />
+  <br />
+  <img src='https://raw.githubusercontent.com/inderrr/imagesForRepos/main/Screenshot%202022-02-26%20221457.png' />
+
+---
+
+  <br />
+
+## A new SocketHoc component
+
+- Explanation about this [Here](https://www.udemy.com/course/mernstack-nextjs-withsocketio/learn/#questions/15297138/).
+
+---
+
+<br />
+
+## getInitialProps replaced with getServerSideProps
+
+- Explanation about this [Here](https://www.udemy.com/course/mernstack-nextjs-withsocketio/learn/lecture/28229950#overview)
+
+---
+
+<br />
+
+## moment.js replaced with dayjs
+
+- The main reason behind this is that moment.js is in maintenance mode. Also, moment is a huge library.
+
+- Comparatively, dayjs is only 2kb in size. The changes made are inside utils/calculateTime.js
+
+---
+
+<br />
+
+## Some other minor bug fixes..
+
+---
+
+<br />
 Note: The vulnerabilities warning which appears while installing node_modules is because of nodemailer-sendgrid-transport dependency. You can remove this dependency if you aren't going to use it for emails.
