@@ -10,7 +10,7 @@
 
 ## Nextjs version update
 
-- Nextjs version updated to 12.1.0 (Latest one at the time of commit).
+- Nextjs version updated to 12.1.5 (Latest one at the time of commit).
 
 ---
 
