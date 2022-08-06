@@ -16,13 +16,18 @@ function CropImageModal({ mediaPreview, setMedia, showModal, setShowModal }) {
   };
 
   useEffect(() => {
-    window.addEventListener("keydown", ({ key }) => {
+    const handleKeyPress = ({ key }) => {
       if (cropper) {
         if (key === "m") cropper.setDragMode("move");
         if (key === "c") cropper.setDragMode("crop");
         if (key === "r") cropper.reset();
       }
-    });
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
   }, [cropper]);
 
   return (

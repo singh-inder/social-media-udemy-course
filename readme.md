@@ -10,7 +10,7 @@
 
 ## Nextjs version update
 
-- Nextjs version updated to 12.1.5 (Latest one at the time of commit).
+- Nextjs version updated to 12.2.4 (Latest one at the time of commit).
 
 ---
 
@@ -34,9 +34,9 @@ import { io } from "socket.io-client";
 
 ## Important changes inside signup page.
 
-- I've removed all the states for username input field on signup page.
+- I've removed all the states for username input field on signup page. Now, we're using vanilla js alongwith useRef hooks inside signup page for making updates to username field. The changes made are inside pages/signup.js
 
-- Now, we're using vanilla js alongwith useRef hooks inside signup page for making updates to username field. The changes made are inside pages/signup.js
+- Debounce added for api requests made for username input. Also added for components/Layout/Search.js
 
 ---
 
@@ -93,9 +93,8 @@ import { io } from "socket.io-client";
 
 <br />
 
-## Some other minor bug fixes..
-
----
+## Some other bug fixes..
 
 <br />
-Note: The vulnerabilities warning which appears while installing node_modules is because of nodemailer-sendgrid-transport dependency. You can remove this dependency if you aren't going to use it for emails.
+
+#### Note: The vulnerabilities warning which appears while installing node_modules is because of nodemailer-sendgrid-transport dependency. You can remove this dependency if you aren't going to use it for emails.

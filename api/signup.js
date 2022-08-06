@@ -25,7 +25,7 @@ router.get("/:username", async (req, res) => {
 
     if (user) return res.status(401).send("Username already taken");
 
-    return res.status(200).send("Available");
+    return res.sendStatus(200);
   } catch (error) {
     console.error(error);
     return res.status(500).send(`Server error`);

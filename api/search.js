@@ -7,7 +7,7 @@ router.get("/:searchText", authMiddleware, async (req, res) => {
   try {
     const { searchText } = req.params;
     const { userId } = req;
-    if (searchText.length === 0) return;
+    if (searchText.length === 0) return res.sendStatus(401);
 
     const results = await UserModel.find({
       name: { $regex: searchText, $options: "i" },

@@ -22,6 +22,7 @@ function Signup() {
   });
 
   const { name, email, password, bio } = user;
+  const [searchTimer, setSearchTimer] = useState(null);
 
   const handleChange = e => {
     const { name, value, files } = e.target;
@@ -60,36 +61,21 @@ function Signup() {
   }, [user]);
 
   const checkUsername = async (value = "") => {
-    if (value.length === 0 || value.trim().length === 0) {
-      if (!requiredFieldDiv.current.classList.contains("error")) {
-        requiredFieldDiv.current.classList.add("error");
-      }
-
-      leftIcon.current.className = "close icon";
-      return;
-    }
-
-    usernameInput.current.value = value;
-
-    usernameInputDiv.current.classList.add("loading");
-
     try {
       if (controller) controller.abort();
 
       controller = new AbortController();
 
-      const res = await axios.get(`${baseUrl}/api/signup/${value}`, {
+      await axios.get(`${baseUrl}/api/signup/${value}`, {
         signal: controller.signal
       });
 
-      if (res.data === "Available") {
-        if (requiredFieldDiv.current.classList.contains("error")) {
-          requiredFieldDiv.current.classList.remove("error");
-        }
-
-        leftIcon.current.className = "check icon";
-        setUser(prev => ({ ...prev, username: value }));
+      if (requiredFieldDiv.current.classList.contains("error")) {
+        requiredFieldDiv.current.classList.remove("error");
       }
+
+      leftIcon.current.className = "check icon";
+      setUser(prev => ({ ...prev, username: value }));
     } catch (error) {
       setErrorMsg("Username Not Available");
 
@@ -197,7 +183,30 @@ function Signup() {
                 ref={usernameInput}
                 placeholder="Username"
                 required
-                onChange={e => checkUsername(e.target.value)}
+                onChange={e => {
+                  if (searchTimer) clearTimeout(searchTimer);
+                  const { value } = e.target;
+                  const noValue = value.length === 0 || value.trim().length === 0;
+
+                  if (noValue) {
+                    if (!requiredFieldDiv.current.classList.contains("error")) {
+                      requiredFieldDiv.current.classList.add("error");
+                    }
+
+                    leftIcon.current.className = "close icon";
+                    usernameInputDiv.current.classList.remove("loading");
+                    return;
+                  }
+
+                  usernameInput.current.value = value;
+                  usernameInputDiv.current.classList.add("loading");
+
+                  setSearchTimer(
+                    setTimeout(() => {
+                      checkUsername(value);
+                    }, 2000)
+                  );
+                }}
               />
               <i aria-hidden="true" ref={leftIcon} className="close icon" />
             </div>

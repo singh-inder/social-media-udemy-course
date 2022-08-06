@@ -10,17 +10,9 @@ function SearchComponent() {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState([]);
+  const [searchTimer, setSearchTimer] = useState(null);
 
-  const handleChange = async e => {
-    const { value } = e.target;
-    setText(value);
-
-    if (value.length === 0) return;
-    if (value.trim().length === 0) return;
-
-    setText(value);
-    setLoading(true);
-
+  const handleChange = async value => {
     try {
       if (controller) controller.abort();
       controller = new AbortController();
@@ -36,7 +28,13 @@ function SearchComponent() {
 
         return setLoading(false);
       }
-      setResults(res.data);
+      const mappedResults = res.data.map(result => ({
+        title: result.name,
+        username: result.username,
+        image: result.profilePicUrl
+      }));
+
+      setResults(mappedResults);
     } catch (error) {
       console.log(error);
     }
@@ -51,7 +49,6 @@ function SearchComponent() {
   return (
     <Search
       onBlur={() => {
-        results.length > 0 && setResults([]);
         loading && setLoading(false);
         setText("");
       }}
@@ -59,19 +56,32 @@ function SearchComponent() {
       value={text}
       resultRenderer={ResultRenderer}
       results={results}
-      onSearchChange={handleChange}
+      onSearchChange={e => {
+        if (searchTimer) clearTimeout(searchTimer);
+        const { value } = e.target;
+        setText(value);
+        const noValue = value.length === 0 || value.trim().length === 0;
+        if (noValue) return;
+
+        setLoading(true);
+        setSearchTimer(
+          setTimeout(() => {
+            handleChange(value);
+          }, 2000)
+        );
+      }}
       minCharacters={1}
       onResultSelect={(e, data) => Router.push(`/${data.result.username}`)}
     />
   );
 }
 
-const ResultRenderer = ({ _id, profilePicUrl, name }) => {
+const ResultRenderer = ({ title, image }) => {
   return (
-    <List key={_id}>
+    <List>
       <List.Item>
-        <Image src={profilePicUrl} alt="ProfilePic" avatar />
-        <List.Content header={name} as="a" />
+        <Image src={image} alt="ProfilePic" avatar />
+        <List.Content header={title} as="a" />
       </List.Item>
     </List>
   );
