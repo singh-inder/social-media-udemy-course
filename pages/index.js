@@ -6,7 +6,6 @@ import CardPost from "../components/Post/CardPost";
 import { Segment } from "semantic-ui-react";
 import { parseCookies } from "nookies";
 import { NoPosts } from "../components/Layout/NoData";
-import { PostDeleteToastr } from "../components/Layout/Toastr";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { PlaceHolderPosts, EndMessage } from "../components/Layout/PlaceHolderGroup";
 
@@ -15,7 +14,6 @@ import { Axios } from "../utils/postActions";
 
 function Index({ user, postsData, errorLoading }) {
   const [posts, setPosts] = useState(postsData || []);
-  const [showToastr, setShowToastr] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
   const [pageNumber, setPageNumber] = useState(2);
@@ -25,10 +23,6 @@ function Index({ user, postsData, errorLoading }) {
   useEffect(() => {
     document.title = `Welcome, ${user.name.split(" ")[0]}`;
   }, []);
-
-  useEffect(() => {
-    showToastr && setTimeout(() => setShowToastr(false), 3000);
-  }, [showToastr]);
 
   const fetchDataOnScroll = async () => {
     try {
@@ -45,8 +39,6 @@ function Index({ user, postsData, errorLoading }) {
 
   return (
     <SocketHoc user={user} socket={socket}>
-      {showToastr && <PostDeleteToastr />}
-
       <Segment>
         <CreatePost user={user} setPosts={setPosts} />
 
@@ -67,7 +59,6 @@ function Index({ user, postsData, errorLoading }) {
                 post={post}
                 user={user}
                 setPosts={setPosts}
-                setShowToastr={setShowToastr}
               />
             ))}
           </InfiniteScroll>

@@ -17,7 +17,8 @@ const {
 router.post("/", authMiddleware, async (req, res) => {
   const { text, location, picUrl } = req.body;
 
-  if (text.length < 1) return res.status(401).send("Text must be atleast 1 character");
+  if (text.length === 0)
+    return res.status(401).send("Text must be atleast 1 character");
 
   try {
     const newPost = {
@@ -173,14 +174,13 @@ router.post("/like/:postId", authMiddleware, async (req, res) => {
       return res.status(404).send("No Post found");
     }
 
-    const isLiked =
-      post.likes.filter(like => like.user.toString() === userId).length > 0;
+    const isLiked = post.likes.some(like => like.user.toString() === userId);
 
     if (isLiked) {
       return res.status(401).send("Post already liked");
     }
 
-    await post.likes.unshift({ user: userId });
+    post.likes.unshift({ user: userId });
     await post.save();
 
     const postByUserId = post.user.toString();
@@ -208,16 +208,15 @@ router.put("/unlike/:postId", authMiddleware, async (req, res) => {
       return res.status(404).send("No Post found");
     }
 
-    const isLiked =
-      post.likes.filter(like => like.user.toString() === userId).length === 0;
+    const isLiked = post.likes.some(like => like.user.toString() === userId);
 
-    if (isLiked) {
+    if (!isLiked) {
       return res.status(401).send("Post not liked before");
     }
 
-    const index = post.likes.map(like => like.user.toString()).indexOf(userId);
+    const index = post.likes.findIndex(like => like.user.toString() === userId);
 
-    await post.likes.splice(index, 1);
+    post.likes.splice(index, 1);
 
     await post.save();
 
@@ -275,7 +274,7 @@ router.post("/comment/:postId", authMiddleware, async (req, res) => {
       date: Date.now()
     };
 
-    await post.comments.unshift(newComment);
+    post.comments.unshift(newComment);
     await post.save();
 
     const postByUserId = post.user.toString();
@@ -293,7 +292,7 @@ router.post("/comment/:postId", authMiddleware, async (req, res) => {
 
 // DELETE A COMMENT
 
-router.delete("/:postId/:commentId", authMiddleware, async (req, res) => {
+router.delete("/comment/:postId/:commentId", authMiddleware, async (req, res) => {
   try {
     const { postId, commentId } = req.params;
     const { userId } = req;
@@ -301,17 +300,14 @@ router.delete("/:postId/:commentId", authMiddleware, async (req, res) => {
     const post = await PostModel.findById(postId);
     if (!post) return res.status(404).send("Post not found");
 
-    const comment = post.comments.find(comment => comment._id === commentId);
-    if (!comment) {
+    const index = post.comments.findIndex(comment => comment._id === commentId);
+    if (index === -1) {
       return res.status(404).send("No Comment found");
     }
-
-    const user = await UserModel.findById(userId);
+    const comment = post.comments[index];
 
     const deleteComment = async () => {
-      const indexOf = post.comments.map(comment => comment._id).indexOf(commentId);
-
-      await post.comments.splice(indexOf, 1);
+      post.comments.splice(index, 1);
 
       await post.save();
 
@@ -325,6 +321,7 @@ router.delete("/:postId/:commentId", authMiddleware, async (req, res) => {
     };
 
     if (comment.user.toString() !== userId) {
+      const user = await UserModel.findById(userId);
       if (user.role === "root") {
         await deleteComment();
       } else {

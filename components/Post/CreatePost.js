@@ -1,5 +1,6 @@
-import React, { useState, useRef } from "react";
-import { Form, Button, Image, Divider, Message, Icon } from "semantic-ui-react";
+import { useState, useRef } from "react";
+import { toast } from "react-toastify";
+import { Form, Button, Image, Divider, Icon } from "semantic-ui-react";
 import uploadPic from "../../utils/uploadPicToCloudinary";
 import { submitNewPost } from "../../utils/postActions";
 import CropImageModal from "./CropImageModal";
@@ -9,7 +10,6 @@ function CreatePost({ user, setPosts }) {
   const [loading, setLoading] = useState(false);
   const inputRef = useRef();
 
-  const [error, setError] = useState(null);
   const [highlighted, setHighlighted] = useState(false);
 
   const [media, setMedia] = useState(null);
@@ -45,27 +45,37 @@ function CreatePost({ user, setPosts }) {
     setLoading(true);
     let picUrl;
 
-    if (media !== null) {
+    if (media) {
       picUrl = await uploadPic(media);
       if (!picUrl) {
         setLoading(false);
-        return setError("Error Uploading Image");
+        return toast.error("Error Uploading Image");
       }
     }
 
-    await submitNewPost(
-      user,
-      newPost.text,
-      newPost.location,
-      picUrl,
-      setPosts,
-      setNewPost,
-      setError
-    );
+    try {
+      const { data } = await submitNewPost(newPost, picUrl);
 
-    setMedia(null);
-    mediaPreview && URL.revokeObjectURL(mediaPreview);
-    setTimeout(() => setMediaPreview(null), 3000);
+      const createdPost = {
+        ...data,
+        user,
+        likes: [],
+        comments: []
+      };
+
+      setPosts(prev => [createdPost, ...prev]);
+
+      setNewPost({ text: "", location: "" });
+
+      if (media) {
+        setMedia(null);
+        setMediaPreview(null);
+        URL.revokeObjectURL(mediaPreview);
+      }
+    } catch (error) {
+      toast.error(error);
+    }
+
     setLoading(false);
   };
 
@@ -85,14 +95,7 @@ function CreatePost({ user, setPosts }) {
         />
       )}
 
-      <Form error={error !== null} onSubmit={handleSubmit}>
-        <Message
-          error
-          onDismiss={() => setError(null)}
-          content={error}
-          header="Oops!"
-        />
-
+      <Form onSubmit={handleSubmit}>
         <Form.Group>
           <Image src={user.profilePicUrl} circular avatar inline />
           <Form.TextArea

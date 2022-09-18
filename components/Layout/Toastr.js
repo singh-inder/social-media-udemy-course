@@ -1,4 +1,3 @@
-import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
 
 const ContainerForToastr = ({ children }) => (
@@ -16,7 +15,9 @@ const ContainerForToastr = ({ children }) => (
     {children}
   </ToastContainer>
 );
-
+/**
+ * @Deprecated Moved to latest react-toastify api
+ */
 export const PostDeleteToastr = () => {
   return (
     <ContainerForToastr>
@@ -32,7 +33,9 @@ export const PostDeleteToastr = () => {
     </ContainerForToastr>
   );
 };
-
+/**
+ * @Deprecated Moved to latest react-toastify api
+ */
 export const ErrorToastr = ({ error }) => {
   return (
     <ContainerForToastr>

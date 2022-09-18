@@ -1,5 +1,6 @@
 import Head from "next/head";
 import axios from "axios";
+import { ToastContainer } from "react-toastify";
 import { parseCookies, destroyCookie } from "nookies";
 import baseUrl from "../utils/baseUrl";
 import { redirectUser } from "../utils/authUser";
@@ -14,6 +15,16 @@ function MyApp({ Component, pageProps }) {
         <meta charSet="UTF-8" />
         <title>Mini Social Media</title>
       </Head>
+
+      <ToastContainer
+        position="bottom-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        pauseOnFocusLoss
+        pauseOnHover={false}
+      />
+
       <Layout {...pageProps}>
         <Component {...pageProps} />
       </Layout>

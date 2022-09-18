@@ -1,47 +1,34 @@
 import axios from "axios";
+import { toast } from "react-toastify";
+import cookie from "js-cookie";
 import baseUrl from "./baseUrl";
 import catchErrors from "./catchErrors";
-import cookie from "js-cookie";
 
 export const Axios = axios.create({
   baseURL: `${baseUrl}/api/posts`,
   headers: { Authorization: cookie.get("token") }
 });
 
-export const submitNewPost = async (
-  user,
-  text,
-  location,
-  picUrl,
-  setPosts,
-  setNewPost,
-  setError
-) => {
+const toastError = error => toast.error(catchErrors(error));
+
+export const submitNewPost = async (newPost, picUrl) => {
   try {
-    const res = await Axios.post("/", { text, location, picUrl });
+    const { data } = await Axios.post("/", { ...newPost, picUrl });
 
-    const newPost = {
-      ...res.data,
-      user,
-      likes: [],
-      comments: []
-    };
-
-    setPosts(prev => [newPost, ...prev]);
-    setNewPost({ text: "", location: "" });
+    return { data };
   } catch (error) {
-    const errorMsg = catchErrors(error);
-    setError(errorMsg);
+    throw catchErrors(error);
   }
 };
 
-export const deletePost = async (postId, setPosts, setShowToastr) => {
+export const deletePost = async (postId, setPosts) => {
   try {
     await Axios.delete(`/${postId}`);
     setPosts(prev => prev.filter(post => post._id !== postId));
-    setShowToastr(true);
+
+    toast.info("Post deleted successfully");
   } catch (error) {
-    alert(catchErrors(error));
+    toastError(error);
   }
 };
 
@@ -57,7 +44,7 @@ export const likePost = async (postId, userId, setLikes, like = true) => {
       setLikes(prev => prev.filter(like => like.user !== userId));
     }
   } catch (error) {
-    alert(catchErrors(error));
+    toastError(error);
   }
 };
 
@@ -75,15 +62,15 @@ export const postComment = async (postId, user, text, setComments, setText) => {
     setComments(prev => [newComment, ...prev]);
     setText("");
   } catch (error) {
-    alert(catchErrors(error));
+    toastError(error);
   }
 };
 
 export const deleteComment = async (postId, commentId, setComments) => {
   try {
-    await Axios.delete(`/${postId}/${commentId}`);
+    await Axios.delete(`/comment/${postId}/${commentId}`);
     setComments(prev => prev.filter(comment => comment._id !== commentId));
   } catch (error) {
-    alert(catchErrors(error));
+    toastError(error);
   }
 };

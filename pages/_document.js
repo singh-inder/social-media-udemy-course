@@ -10,6 +10,10 @@ export default function Document() {
 
         <link rel="stylesheet" type="text/css" href="/styles.css" />
         <link rel="stylesheet" type="text/css" href="/nprogress.css" />
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/react-toastify@9.0.8/dist/ReactToastify.min.css"
+        />
       </Head>
       <body>
         <Main />

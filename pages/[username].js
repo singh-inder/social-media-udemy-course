@@ -13,7 +13,6 @@ import Followers from "../components/Profile/Followers";
 import Following from "../components/Profile/Following";
 import UpdateProfile from "../components/Profile/UpdateProfile";
 import Settings from "../components/Profile/Settings";
-import { PostDeleteToastr } from "../components/Layout/Toastr";
 import SocketHoc from "../components/SocketHoc";
 import { Axios } from "../utils/profileActions";
 
@@ -29,7 +28,6 @@ function ProfilePage({
 
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [showToastr, setShowToastr] = useState(false);
 
   const [activeItem, setActiveItem] = useState("profile");
   const handleItemClick = clickedTab => setActiveItem(clickedTab);
@@ -57,16 +55,10 @@ function ProfilePage({
     })();
   }, [router.query.username]);
 
-  useEffect(() => {
-    showToastr && setTimeout(() => setShowToastr(false), 4000);
-  }, [showToastr]);
-
   const socket = useRef();
 
   return (
     <SocketHoc user={user} socket={socket}>
-      {showToastr && <PostDeleteToastr />}
-
       <Grid stackable>
         <Grid.Row>
           <Grid.Column>
@@ -102,7 +94,6 @@ function ProfilePage({
                       post={post}
                       user={user}
                       setPosts={setPosts}
-                      setShowToastr={setShowToastr}
                     />
                   ))
                 ) : (
