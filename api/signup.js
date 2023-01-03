@@ -6,7 +6,7 @@ const FollowerModel = require("../models/FollowerModel");
 const NotificationModel = require("../models/NotificationModel");
 const ChatModel = require("../models/ChatModel");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const isEmail = require("validator/lib/isEmail");
 const userPng =
   "https://res.cloudinary.com/indersingh/image/upload/v1593464618/App/user_mklcpl.png";

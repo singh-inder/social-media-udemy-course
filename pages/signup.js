@@ -73,7 +73,7 @@ function Signup() {
       if (requiredFieldDiv.current.classList.contains("error")) {
         requiredFieldDiv.current.classList.remove("error");
       }
-
+      if (errorMsg !== null) setErrorMsg(null);
       leftIcon.current.className = "check icon";
       setUser(prev => ({ ...prev, username: value }));
     } catch (error) {

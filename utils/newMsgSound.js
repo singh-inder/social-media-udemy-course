@@ -1,7 +1,7 @@
 const newMsgSound = senderName => {
   const sound = new Audio("/light.mp3");
 
-  sound && sound.play();
+  if (sound) sound.play().catch(err => console.log(err));
 
   if (senderName) {
     document.title = `New message from ${senderName}`;

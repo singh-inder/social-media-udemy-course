@@ -1,8 +1,8 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import Navbar from "./Navbar";
 import { Container, Visibility, Grid, Sticky, Ref, Segment } from "semantic-ui-react";
 import nprogress from "nprogress";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import SideMenu from "./SideMenu";
 import Search from "./Search";
 import MobileHeader from "./MobileHeader";
@@ -21,9 +21,18 @@ function Layout({ children, user }) {
 
   const messagesRoute = router.pathname === "/messages";
 
-  Router.onRouteChangeStart = () => nprogress.start();
-  Router.onRouteChangeComplete = () => nprogress.done();
-  Router.onRouteChangeError = () => nprogress.done();
+  useEffect(() => {
+    const events = ["routeChangeStart", "routeChangeComplete", "routeChangeError"];
+    events.forEach((event, i) =>
+      router.events.on(event, i === 0 ? nprogress.start : nprogress.done)
+    );
+
+    return () => {
+      events.forEach((event, i) =>
+        router.events.off(event, i === 0 ? nprogress.start : nprogress.done)
+      );
+    };
+  }, [router]);
 
   return (
     <>
