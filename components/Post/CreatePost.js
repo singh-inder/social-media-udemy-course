@@ -1,9 +1,10 @@
 import { useState, useRef } from "react";
 import { toast } from "react-toastify";
-import { Form, Button, Image, Divider, Icon } from "semantic-ui-react";
+import { Form, Button, Divider, Icon } from "semantic-ui-react";
 import uploadPic from "../../utils/uploadPicToCloudinary";
 import { submitNewPost } from "../../utils/postActions";
 import CropImageModal from "./CropImageModal";
+import Avatar from "./Avatar";
 
 function CreatePost({ user, setPosts }) {
   const [newPost, setNewPost] = useState({ text: "", location: "" });
@@ -97,7 +98,11 @@ function CreatePost({ user, setPosts }) {
 
       <Form onSubmit={handleSubmit}>
         <Form.Group>
-          <Image src={user.profilePicUrl} circular avatar inline />
+          <Avatar
+            alt={user.name}
+            src={user.profilePicUrl}
+            styles={{ display: "inline-block" }}
+          />
           <Form.TextArea
             placeholder="Whats Happening"
             name="text"
@@ -147,12 +152,10 @@ function CreatePost({ user, setPosts }) {
           {media === null ? (
             <Icon name="plus" size="big" />
           ) : (
-            <Image
+            <img
               style={{ height: "150px", width: "150px" }}
               src={mediaPreview}
               alt="PostImage"
-              centered
-              size="medium"
             />
           )}
         </div>

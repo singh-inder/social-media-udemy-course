@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Segment, Image, Grid, Divider, Header, Button, List } from "semantic-ui-react";
+import { Segment, Grid, Divider, Header, Button, List } from "semantic-ui-react";
+import Avatar from "../Post/Avatar";
 import { followUser, unfollowUser } from "../../utils/profileActions";
 
 function ProfileHeader({
@@ -10,11 +11,9 @@ function ProfileHeader({
 }) {
   const [loading, setLoading] = useState(false);
 
-  const isFollowing =
-    loggedUserFollowStats.following.length > 0 &&
-    loggedUserFollowStats.following.filter(
-      following => following.user === profile.user._id
-    ).length > 0;
+  const isFollowing = loggedUserFollowStats.following.some(
+    following => following.user === profile.user._id
+  );
 
   return (
     <>
@@ -90,7 +89,11 @@ function ProfileHeader({
 
           <Grid.Column width={5} stretched style={{ textAlign: "center" }}>
             <Grid.Row>
-              <Image size="large" avatar src={profile.user.profilePicUrl} />
+              <Avatar
+                styles={{ height: "250px", width: "200px" }}
+                alt={profile.user.name}
+                src={profile.user.profilePicUrl}
+              />
             </Grid.Row>
             <br />
 

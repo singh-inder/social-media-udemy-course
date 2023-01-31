@@ -1,23 +1,15 @@
 import { useState } from "react";
-import {
-  Card,
-  Icon,
-  Image,
-  Divider,
-  Segment,
-  Button,
-  Popup,
-  Header,
-  Modal
-} from "semantic-ui-react";
+// prettier-ignore
+import { Card, Icon, Divider, Segment, Button, Popup, Header, Modal} from "semantic-ui-react";
+import Link from "next/link";
 import PostComments from "./PostComments";
 import CommentInputField from "./CommentInputField";
 import calculateTime from "../../utils/calculateTime";
-import Link from "next/link";
 import { deletePost, likePost } from "../../utils/postActions";
 import LikesList from "./LikesList";
 import ImageModal from "./ImageModal";
 import NoImageModal from "./NoImageModal";
+import Avatar from "./Avatar";
 
 function CardPost({ post, user, setPosts, socket }) {
   const [likes, setLikes] = useState(post.likes);
@@ -28,15 +20,8 @@ function CardPost({ post, user, setPosts, socket }) {
 
   const [showModal, setShowModal] = useState(false);
 
-  const addPropsToModal = {
-    post,
-    user,
-    setLikes,
-    likes,
-    isLiked,
-    comments,
-    setComments
-  };
+  // prettier-ignore
+  const addPropsToModal = { post, user, setLikes, likes, isLiked, comments, setComments };
 
   return (
     <>
@@ -60,31 +45,29 @@ function CardPost({ post, user, setPosts, socket }) {
       <Segment basic>
         <Card color="teal" fluid>
           {post.picUrl && (
-            <Image
+            <img
+              loading="lazy"
               src={post.picUrl}
               style={{ cursor: "pointer" }}
-              floated="left"
-              wrapped
-              ui={false}
               alt="PostImage"
               onClick={() => setShowModal(true)}
             />
           )}
 
-          <Card.Content>
-            <Image floated="left" src={post.user.profilePicUrl} avatar circular />
-
+          <Card.Content className="relative">
             {(user.role === "root" || post.user._id === user._id) && (
-              <>
+              <div style={{ position: "absolute", right: "10px" }}>
                 <Popup
                   on="click"
                   position="top right"
                   trigger={
-                    <Image
-                      src="/deleteIcon.svg"
+                    <img
+                      alt="deleteIcon"
+                      loading="lazy"
                       style={{ cursor: "pointer" }}
-                      size="mini"
-                      floated="right"
+                      src="/deleteIcon.svg"
+                      height={35}
+                      width={35}
                     />
                   }
                 >
@@ -98,26 +81,23 @@ function CardPost({ post, user, setPosts, socket }) {
                     onClick={() => deletePost(post._id, setPosts)}
                   />
                 </Popup>
-              </>
+              </div>
             )}
 
-            <Card.Header>
-              <Link href={`/${post.user.username}`}>
-                <a>{post.user.name}</a>
-              </Link>
-            </Card.Header>
+            <div className="flex" style={{ gap: "1rem" }}>
+              <Avatar alt={post.user.name} src={post.user.profilePicUrl} />
 
-            <Card.Meta>{calculateTime(post.createdAt)}</Card.Meta>
+              <div>
+                <h4 style={{ marginBottom: "2px" }}>
+                  <Link href={`/${post.user.username}`}>{post.user.name}</Link>
+                </h4>
+                <Card.Meta>{calculateTime(post.createdAt)}</Card.Meta>
 
-            {post.location && <Card.Meta content={post.location} />}
+                {post.location && <Card.Meta content={post.location} />}
+              </div>
+            </div>
 
-            <Card.Description
-              style={{
-                fontSize: "17px",
-                letterSpacing: "0.1px",
-                wordSpacing: "0.35px"
-              }}
-            >
+            <Card.Description className="cardDescription">
               {post.text}
             </Card.Description>
           </Card.Content>

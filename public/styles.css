@@ -1,9 +1,22 @@
 :root {
   --progressBar: #54d1db;
 }
+.absolute {
+  position: absolute !important;
+}
+.relative {
+  position: relative !important;
+}
 
-body {
-  background: var(--bodyBg);
+.flex {
+  display: flex !important;
+}
+.flex-col {
+  flex-direction: column !important;
+}
+
+.items-center {
+  align-items: center;
 }
 
 .spanLikesList:hover {
@@ -33,7 +46,9 @@ body {
   text-align: center;
 }
 
-.ui.styled.accordion .content {
-  margin: 0;
-  padding: 0.5em 1em 0.75em !important;
+.cardDescription {
+  margin-top: 1rem;
+  font-size: 17px;
+  letter-spacing: 0.1px;
+  word-spacing: 0.35px;
 }

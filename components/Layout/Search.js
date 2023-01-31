@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { List, Image, Search } from "semantic-ui-react";
+import { List, Search } from "semantic-ui-react";
 import axios from "axios";
 import cookie from "js-cookie";
 import Router from "next/router";
+import Avatar from "../Post/Avatar";
 import baseUrl from "../../utils/baseUrl";
 let controller = null;
 
@@ -61,7 +62,7 @@ function SearchComponent() {
         const { value } = e.target;
         setText(value);
         const noValue = value.length === 0 || value.trim().length === 0;
-        if (noValue) return;
+        if (noValue) return setResults([]);
 
         setLoading(true);
         setSearchTimer(
@@ -79,9 +80,17 @@ function SearchComponent() {
 const ResultRenderer = ({ title, image }) => {
   return (
     <List>
-      <List.Item>
-        <Image src={image} alt="ProfilePic" avatar />
-        <List.Content header={title} as="a" />
+      <List.Item
+        className="relative flex items-center"
+        style={{ marginBottom: "5px", marginTop: "5px" }}
+      >
+        <List.Content header={title} />
+
+        <Avatar
+          styles={{ position: "absolute", right: "10px" }}
+          src={image}
+          alt={title}
+        />
       </List.Item>
     </List>
   );

@@ -1,5 +1,5 @@
-import React from "react";
-import { Segment, Grid, Image } from "semantic-ui-react";
+import { Segment, Grid } from "semantic-ui-react";
+import Avatar from "../Post/Avatar";
 
 function Banner({ bannerData }) {
   const { name, profilePicUrl } = bannerData;
@@ -8,8 +8,13 @@ function Banner({ bannerData }) {
     <Segment color="teal" attached="top">
       <Grid>
         <Grid.Column floated="left" width={14}>
-          <h4>
-            <Image avatar src={profilePicUrl} />
+          <h4 style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <Avatar
+              styles={{ height: "2.5rem", width: "2.5rem" }}
+              alt={name}
+              src={profilePicUrl}
+            />
+
             {name}
           </h4>
         </Grid.Column>

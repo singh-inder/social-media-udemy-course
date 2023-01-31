@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { List, Popup, Image } from "semantic-ui-react";
+import { List, Popup } from "semantic-ui-react";
 import catchErrors from "../../utils/catchErrors";
 import Router from "next/router";
 import { LikesPlaceHolder } from "../Layout/PlaceHolderGroup";
+import Avatar from "./Avatar";
 import { Axios } from "../../utils/postActions";
 
 function LikesList({ postId, trigger }) {
@@ -44,8 +45,16 @@ function LikesList({ postId, trigger }) {
             >
               <List selection size="large">
                 {likesList.map(like => (
-                  <List.Item key={like._id}>
-                    <Image avatar src={like.user.profilePicUrl} />
+                  <List.Item
+                    key={like._id}
+                    className="flex items-center"
+                    style={{ gap: "10px" }}
+                  >
+                    <Avatar
+                      size={30}
+                      alt={like.user.name}
+                      src={like.user.profilePicUrl}
+                    />
 
                     <List.Content>
                       <List.Header

@@ -1,8 +1,11 @@
-import React from "react";
 import Search from "../components/Layout/Search";
 
 function SearchPage() {
-  return <Search />;
+  return (
+    <div style={{ margin: "1rem" }}>
+      <Search />
+    </div>
+  );
 }
 
 export default SearchPage;

@@ -1,7 +1,8 @@
 import React from "react";
-import { Modal, Grid, Image, Card, Icon, Divider } from "semantic-ui-react";
+import { Modal, Grid, Card, Icon, Divider } from "semantic-ui-react";
 import PostComments from "./PostComments";
 import CommentInputField from "./CommentInputField";
+import Avatar from "./Avatar";
 import calculateTime from "../../utils/calculateTime";
 import Link from "next/link";
 import { likePost } from "../../utils/postActions";
@@ -13,7 +14,7 @@ function ImageModal({
   setLikes,
   likes,
   isLiked,
-  comments,
+  comments = [],
   setComments
 }) {
   return (
@@ -21,31 +22,31 @@ function ImageModal({
       <Grid columns={2} stackable relaxed>
         <Grid.Column>
           <Modal.Content image>
-            <Image wrapped size="large" src={post.picUrl} />
+            <img
+              style={{ width: "100%", height: "100%" }}
+              alt={post.user.name}
+              src={post.picUrl}
+            />
           </Modal.Content>
         </Grid.Column>
 
         <Grid.Column>
           <Card fluid>
             <Card.Content>
-              <Image floated="left" avatar src={post.user.profilePicUrl} />
+              <div className="flex" style={{ gap: "1rem" }}>
+                <Avatar alt={post.user.name} src={post.user.profilePicUrl} />
 
-              <Card.Header>
-                <Link href={`/${post.user.username}`}>
-                  <a>{post.user.name}</a>
-                </Link>
-              </Card.Header>
+                <div>
+                  <h4 style={{ marginBottom: "2px" }}>
+                    <Link href={`/${post.user.username}`}>{post.user.name}</Link>
+                  </h4>
+                  <Card.Meta>{calculateTime(post.createdAt)}</Card.Meta>
 
-              <Card.Meta>{calculateTime(post.createdAt)}</Card.Meta>
+                  {post.location && <Card.Meta content={post.location} />}
+                </div>
+              </div>
 
-              {post.location && <Card.Meta content={post.location} />}
-
-              <Card.Description
-                style={{
-                  fontSize: "17px",
-                  letterSpacing: "0.1px",
-                  wordSpacing: "0.35px"
-                }}>
+              <Card.Description className="cardDescription">
                 {post.text}
               </Card.Description>
             </Card.Content>
@@ -78,17 +79,17 @@ function ImageModal({
                   overflow: "auto",
                   height: comments.length > 2 ? "200px" : "60px",
                   marginBottom: "8px"
-                }}>
-                {comments.length > 0 &&
-                  comments.map(comment => (
-                    <PostComments
-                      key={comment._id}
-                      comment={comment}
-                      postId={post._id}
-                      user={user}
-                      setComments={setComments}
-                    />
-                  ))}
+                }}
+              >
+                {comments.map(comment => (
+                  <PostComments
+                    key={comment._id}
+                    comment={comment}
+                    postId={post._id}
+                    user={user}
+                    setComments={setComments}
+                  />
+                ))}
               </div>
 
               <CommentInputField

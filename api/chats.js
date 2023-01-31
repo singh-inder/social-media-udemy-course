@@ -93,8 +93,8 @@ router.delete(`/:messagesWith`, authMiddleware, async (req, res) => {
 router.post("/", authMiddleware, async (req, res) => {
   try {
     const user = await UserModel.findById(req.userId);
-    if (!user.unreadMessage) {
-      user.unreadMessage = true;
+    if (user.unreadMessage) {
+      user.unreadMessage = false;
       await user.save();
     }
 

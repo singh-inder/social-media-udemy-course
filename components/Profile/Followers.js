@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Button, Image, List } from "semantic-ui-react";
+import { Button } from "semantic-ui-react";
 import Spinner from "../Layout/Spinner";
 import { NoFollowData } from "../Layout/NoData";
+import Avatar from "../Post/Avatar";
 import { followUser, unfollowUser } from "../../utils/profileActions";
 import axios from "axios";
 import baseUrl from "../../utils/baseUrl";
@@ -42,49 +43,51 @@ const Followers = ({
     <>
       {loading ? (
         <Spinner />
-      ) : followers.length > 0 ? (
+      ) : (
         followers.map(profileFollower => {
-          /*  */
-
-          const isFollowing =
-            loggedUserFollowStats.following.length > 0 &&
-            loggedUserFollowStats.following.some(
-              following => following.user === profileFollower.user._id
-            );
+          const isFollowing = loggedUserFollowStats.following?.some(
+            following => following.user === profileFollower.user._id
+          );
 
           return (
-            <List key={profileFollower.user._id} divided verticalAlign="middle">
-              <List.Item>
-                <List.Content floated="right">
-                  {profileFollower.user._id !== user._id && (
-                    <Button
-                      color={isFollowing ? "instagram" : "twitter"}
-                      icon={isFollowing ? "check" : "add user"}
-                      content={isFollowing ? "Following" : "Follow"}
-                      disabled={followLoading}
-                      onClick={() => {
-                        setFollowLoading(true);
+            <div
+              className="flex items-center relative"
+              style={{ gap: "10px", marginBottom: "1.2rem" }}
+            >
+              <Avatar
+                alt={profileFollower.user.name}
+                src={profileFollower.user.profilePicUrl}
+              />
 
-                        isFollowing
-                          ? unfollowUser(profileFollower.user._id, setUserFollowStats)
-                          : followUser(profileFollower.user._id, setUserFollowStats);
+              <a href={`/${profileFollower.user.username}`}>
+                {profileFollower.user.name}
+              </a>
 
-                        setFollowLoading(false);
-                      }}
-                    />
-                  )}
-                </List.Content>
-                <Image avatar src={profileFollower.user.profilePicUrl} />
-                <List.Content as="a" href={`/${profileFollower.user.username}`}>
-                  {profileFollower.user.name}
-                </List.Content>
-              </List.Item>
-            </List>
+              <div className="absolute" style={{ right: "10px" }}>
+                {profileFollower.user._id !== user._id && (
+                  <Button
+                    color={isFollowing ? "instagram" : "twitter"}
+                    icon={isFollowing ? "check" : "add user"}
+                    content={isFollowing ? "Following" : "Follow"}
+                    disabled={followLoading}
+                    onClick={() => {
+                      setFollowLoading(true);
+
+                      isFollowing
+                        ? unfollowUser(profileFollower.user._id, setUserFollowStats)
+                        : followUser(profileFollower.user._id, setUserFollowStats);
+
+                      setFollowLoading(false);
+                    }}
+                  />
+                )}
+              </div>
+            </div>
           );
         })
-      ) : (
-        <NoFollowData followersComponent={true} />
       )}
+
+      {followers.length === 0 && <NoFollowData followersComponent={true} />}
     </>
   );
 };
