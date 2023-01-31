@@ -10,16 +10,20 @@ function FollowerNotification({
 }) {
   const [disabled, setDisabled] = useState(false);
 
-  const isFollowing =
-    loggedUserFollowStats.following.length > 0 &&
-    loggedUserFollowStats.following.filter(
-      following => following.user === notification.user._id
-    ).length > 0;
+  const isFollowing = loggedUserFollowStats?.following?.some(
+    following => following.user === notification.user._id
+  );
 
   return (
     <>
       <Feed.Event>
-        <Feed.Label image={notification.user.profilePicUrl} />
+        <Feed.Label>
+          <img
+            loading="lazy"
+            src={notification.user.profilePicUrl}
+            alt={notification.user.name}
+          />
+        </Feed.Label>
         <Feed.Content>
           <Feed.Summary>
             <>

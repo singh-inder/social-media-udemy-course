@@ -6,7 +6,13 @@ function LikeNotification({ notification }) {
   return (
     <>
       <Feed.Event>
-        <Feed.Label image={notification.user.profilePicUrl} />
+        <Feed.Label>
+          <img
+            loading="lazy"
+            src={notification.user.profilePicUrl}
+            alt={notification.user.name}
+          />
+        </Feed.Label>
         <Feed.Content>
           <Feed.Summary>
             <>
@@ -21,7 +27,7 @@ function LikeNotification({ notification }) {
           {notification.post.picUrl && (
             <Feed.Extra images>
               <a href={`/post/${notification.post._id}`}>
-                <img src={notification.post.picUrl} />
+                <img loading="lazy" src={notification.post.picUrl} />
               </a>
             </Feed.Extra>
           )}

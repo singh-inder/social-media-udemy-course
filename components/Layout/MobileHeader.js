@@ -1,66 +1,82 @@
-import React from "react";
-import { Menu, Container, Icon, Dropdown } from "semantic-ui-react";
+import { useCallback } from "react";
+import { Menu, Icon, Dropdown } from "semantic-ui-react";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import { logoutUser } from "../../utils/authUser";
 
-function MobileHeader({ user: { unreadNotification, email, unreadMessage, username } }) {
+function MobileHeader({ user }) {
+  const { unreadNotification, email, unreadMessage, username } = user;
   const router = useRouter();
-  const isActive = route => router.pathname === route;
+
+  const isActive = useCallback(route => router.pathname === route, [router]);
+  // prettier-ignore
+  const push = useCallback(e => {
+    e.preventDefault();
+    router.push(e.currentTarget.href);
+  }, [router]);
+
+  const common = (menuItem = true) => ({
+    as: "a",
+    onClick: push,
+    ...(menuItem && { header: true })
+  });
 
   return (
-    <>
-      <Menu fluid borderless>
-        <Container text>
-          <Link href="/">
-            <Menu.Item header active={isActive("/")}>
-              <Icon name="rss" size="large" />
-            </Menu.Item>
-          </Link>
+    <Menu fluid borderless widths={4}>
+      <Menu.Item {...common()} href="/" active={isActive("/")}>
+        <Icon name="home" size="large" />
+      </Menu.Item>
 
-          <Link href="/messages">
-            <Menu.Item header active={isActive("/messages") || unreadMessage}>
-              <Icon
-                name={unreadMessage ? "hand point right" : "mail outline"}
-                size="large"
-              />
-            </Menu.Item>
-          </Link>
+      <Menu.Item
+        {...common()}
+        href="/messages"
+        active={isActive("/messages") || unreadMessage}
+      >
+        <div style={{ position: "relative" }}>
+          {unreadMessage && <div className="menuIconBadge mobile" />}
 
-          <Link href="/notifications">
-            <Menu.Item header active={isActive("/notifications") || unreadNotification}>
-              <Icon
-                name={unreadNotification ? "hand point right" : "bell outline"}
-                size="large"
-              />
-            </Menu.Item>
-          </Link>
+          <Icon name="mail outline" size="large" />
+        </div>
+      </Menu.Item>
 
-          <Dropdown item icon="bars" direction="left">
-            <Dropdown.Menu>
-              <Link href={`/${username}`}>
-                <Dropdown.Item active={isActive(`/${username}`)}>
-                  <Icon name="user" size="large" />
-                  Account
-                </Dropdown.Item>
-              </Link>
+      <Menu.Item
+        {...common()}
+        href="/notifications"
+        active={isActive("/notifications") || unreadNotification}
+      >
+        <div style={{ position: "relative" }}>
+          {unreadNotification && <div className="menuIconBadge mobile" />}
 
-              <Link href="/search">
-                <Dropdown.Item active={isActive("/search")}>
-                  <Icon name="search" size="large" />
-                  Search
-                </Dropdown.Item>
-              </Link>
+          <Icon name="bell outline" size="large" />
+        </div>
+      </Menu.Item>
 
-              <Dropdown.Item onClick={() => logoutUser(email)}>
-                <Icon name="sign out alternate" size="large" />
-                Logout
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </Container>
-      </Menu>
-    </>
+      <Dropdown item icon="bars" direction="left">
+        <Dropdown.Menu>
+          <Dropdown.Item
+            {...common(false)}
+            href={`/${username}`}
+            active={isActive(`/${username}`)}
+          >
+            <Icon name="user" size="large" />
+            Account
+          </Dropdown.Item>
+
+          <Dropdown.Item
+            {...common(false)}
+            href="/search"
+            active={isActive("/search")}
+          >
+            <Icon name="search" size="large" />
+            Search
+          </Dropdown.Item>
+
+          <Dropdown.Item onClick={() => logoutUser(email)}>
+            <Icon name="sign out alternate" size="large" />
+            Logout
+          </Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+    </Menu>
   );
 }
 

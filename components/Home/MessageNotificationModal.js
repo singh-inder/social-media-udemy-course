@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { Form, Modal, Segment, List, Icon } from "semantic-ui-react";
 import Link from "next/link";
 import calculateTime from "../../utils/calculateTime";
+import styles from "../Messages/listMessages.module.css";
+
+const { bubbleWrapper, inlineContainer, inlineIcon, otherBubble, other } = styles;
 
 function MessageNotificationModal({
   socket,
@@ -43,14 +46,14 @@ function MessageNotificationModal({
         <Modal.Header content={`New Message from ${newMessageReceived.senderName}`} />
 
         <Modal.Content>
-          <div className="bubbleWrapper">
-            <div className="inlineContainer">
-              <img className="inlineIcon" src={newMessageReceived.senderProfilePic} />
+          <div className={bubbleWrapper}>
+            <div className={inlineContainer}>
+              <img className={inlineIcon} src={newMessageReceived.senderProfilePic} />
             </div>
 
-            <div className="otherBubble other">{newMessageReceived.msg}</div>
+            <div className={`${otherBubble} ${other}`}>{newMessageReceived.msg}</div>
 
-            <span className="other">{calculateTime(newMessageReceived.date)}</span>
+            <span className={other}>{calculateTime(newMessageReceived.date)}</span>
           </div>
 
           <div style={{ position: "sticky", bottom: "0px" }}>
@@ -74,7 +77,7 @@ function MessageNotificationModal({
 
           <div style={{ marginTop: "5px" }}>
             <Link href={`/messages?message=${newMessageReceived.sender}`}>
-              <a>View All Messages</a>
+              View All Messages
             </Link>
 
             <br />
@@ -102,9 +105,7 @@ const Instructions = ({ username }) => (
       <Icon name="hand point right" />
       <List.Content>
         You can disable it by going to
-        <Link href={`/${username}`}>
-          <a> Account </a>
-        </Link>
+        <Link href={`/${username}`}>Account</Link>
         Page and clicking on Settings Tab.
       </List.Content>
     </List.Item>

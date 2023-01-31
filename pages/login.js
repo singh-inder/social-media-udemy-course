@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Form, Button, Message, Segment, Divider } from "semantic-ui-react";
-import { loginUser } from "../utils/authUser";
-import { HeaderMessage, FooterMessage } from "../components/Common/WelcomeMessage";
 import cookie from "js-cookie";
+import { HeaderMessage, FooterMessage } from "../components/Common/WelcomeMessage";
+import useFormInput from "../components/hooks/useFormInput";
+import { loginUser } from "../utils/authUser";
 
 function Login() {
-  const [user, setUser] = useState({
+  const { state: user, handleChange } = useFormInput({
     email: "",
     password: ""
   });
@@ -16,16 +17,10 @@ function Login() {
   const [formLoading, setFormLoading] = useState(false);
   const [submitDisabled, setSubmitDisabled] = useState(true);
 
-  const handleChange = e => {
-    const { name, value } = e.target;
-
-    setUser(prev => ({ ...prev, [name]: value }));
-  };
-
   useEffect(() => {
     const isUser = Object.values({ email, password }).every(item => Boolean(item));
     isUser ? setSubmitDisabled(false) : setSubmitDisabled(true);
-  }, [user]);
+  }, [email, password]);
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -36,8 +31,8 @@ function Login() {
   useEffect(() => {
     document.title = "Welcome Back";
     const userEmail = cookie.get("userEmail");
-    if (userEmail) setUser(prev => ({ ...prev, email: userEmail }));
-  }, []);
+    if (userEmail) handleChange({ target: { name: "email", value: userEmail } });
+  }, [handleChange]);
 
   return (
     <>

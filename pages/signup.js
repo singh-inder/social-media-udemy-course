@@ -1,19 +1,28 @@
 import { useState, useEffect, useRef } from "react";
 import { Form, Button, Message, Segment, Divider } from "semantic-ui-react";
+import axios from "axios";
 import CommonInputs from "../components/Common/CommonInputs";
 import ImageDropDiv from "../components/Common/ImageDropDiv";
+import useFormInput from "../components/hooks/useFormInput";
 import { HeaderMessage, FooterMessage } from "../components/Common/WelcomeMessage";
-import axios from "axios";
 import baseUrl from "../utils/baseUrl";
 import { registerUser } from "../utils/authUser";
 import uploadPic from "../utils/uploadPicToCloudinary";
 let controller = null;
 
 function Signup() {
-  const [user, setUser] = useState({
+  const {
+    state: user,
+    handleChange,
+    media,
+    setMedia,
+    mediaPreview,
+    setMediaPreview
+  } = useFormInput({
     name: "",
     email: "",
     password: "",
+    username: "",
     bio: "",
     facebook: "",
     youtube: "",
@@ -23,19 +32,6 @@ function Signup() {
 
   const { name, email, password, bio } = user;
   const [searchTimer, setSearchTimer] = useState(null);
-
-  const handleChange = e => {
-    const { name, value, files } = e.target;
-
-    if (name === "media") {
-      if (files && files.length > 0) {
-        setMedia(files[0]);
-        return setMediaPreview(URL.createObjectURL(files[0]));
-      }
-    }
-
-    setUser(prev => ({ ...prev, [name]: value }));
-  };
 
   const [showSocialLinks, setShowSocialLinks] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -48,8 +44,6 @@ function Signup() {
   const usernameInput = useRef();
   const leftIcon = useRef();
 
-  const [media, setMedia] = useState(null);
-  const [mediaPreview, setMediaPreview] = useState(null);
   const [highlighted, setHighlighted] = useState(false);
   const inputRef = useRef();
 
@@ -58,7 +52,7 @@ function Signup() {
       Boolean(item)
     );
     isUser ? setSubmitDisabled(false) : setSubmitDisabled(true);
-  }, [user]);
+  }, [name, email, password, bio]);
 
   const checkUsername = async (value = "") => {
     try {
@@ -75,7 +69,7 @@ function Signup() {
       }
       if (errorMsg !== null) setErrorMsg(null);
       leftIcon.current.className = "check icon";
-      setUser(prev => ({ ...prev, username: value }));
+      handleChange({ target: { name: "username", value } });
     } catch (error) {
       setErrorMsg("Username Not Available");
 
